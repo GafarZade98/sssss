@@ -1,8 +1,10 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\AdminController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -22,9 +24,11 @@ Route::get('/posts', [PostController::class, 'posts'])->name('posts');
 
 
 //   backend
-Route::prefix('admin')->group(function () {
-    Route::get('/', [AdminController::class, 'index']);
+Route::group([
+    'middleware' => 'admin',
+    'prefix' => 'admin'],function () {
 
+    Route::get('/', [AdminController::class, 'index'])->name('dashboard');
 
 //    post
     Route::get('/posts', [AdminController::class, 'posts'])->name('table-posts');
@@ -44,5 +48,13 @@ Route::prefix('admin')->group(function () {
     Route::post('/store-topic', [AdminController::class, 'topicStore'])->name('topic.store');
     Route::post('delete-topic',[AdminController::class, 'topicDelete'])->name('topic.delete');
 
+//   users
+    Route::get('/users', [AdminController::class, 'users'])->name('table-users');
+    Route::get('/get-users', [AdminController::class, 'getUsers'])->name('get-users');
+    Route::post('/store-user', [AdminController::class, 'userStore'])->name('user.store');
+    Route::post('delete-user',[AdminController::class, 'userDelete'])->name('user.delete');
 
 });
+
+Auth::routes();
+

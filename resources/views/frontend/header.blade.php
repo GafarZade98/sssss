@@ -68,14 +68,20 @@
                                         <hr class="dropdown-divider"/>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item" href="#">sasds</a>
+                                        <a class="dropdown-item" href="{{ route('logout') }}"
+                                           onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                                            {{ __('Logout') }}</a>
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                            @csrf
+                                        </form>
                                     </li>
                                 </ul>
                             </li>
                         </ul>
                     @else
                         <ul class="navbar-nav ml-2 mb-2 mb-lg-0">
-                            <li class="nav-item"><a href="{{ route('login') }}" class="no-underline hover:underline text-sm font-normal text-teal-800 uppercase">{{ __('Login') }}</a></li>
+                            <li class="nav-item mr-3"><a href="{{ route('login') }}" class="no-underline hover:underline text-sm font-normal text-teal-800 uppercase">{{ __('Login') }}</a></li>
                             @if (Route::has('register'))
                             <li class="nav-item"><a href="{{ route('register') }}" class="no-underline hover:underline text-sm font-normal text-teal-800 uppercase">{{ __('Register') }}</a></li>
                             @endif

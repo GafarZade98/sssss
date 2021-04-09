@@ -6,6 +6,7 @@ use App\Models\Item;
 use App\Models\Topic;
 use Illuminate\Http\Request;
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 
@@ -145,6 +146,51 @@ class AdminController extends Controller
     {
         collect(json_decode($request->get('data')))->each(function ($cat){
             Topic::destroy($cat->id);
+        });
+
+        return response('ok');
+    }
+
+
+    public function users()
+
+    {
+        return view('admin.users-table');
+    }
+
+    public function getUsers(Request $request)
+    {
+        $per_page = $request->get('limit') ?? 20;
+        $offset = $request->get('offset') ?? 0;
+        $search = $request->get('search') ?? null;
+        $sort = $request->get('sort') ?? 'created_at';
+        $order = $request->get('order') ?? 'asc';
+
+        $items = User::where('name', 'like', "$search%")
+            ->orderBy($sort, $order);
+
+        return response()->json([
+            'total' => $items->count(),
+            'rows' => $items->offset($offset)->limit($per_page)->get(),
+        ]);
+
+    }
+
+    public function userStore(Request $request)
+    {
+
+        $user = User::updateOrCreate(
+            ['id' => $request->get('id')],
+            $request->except('_token','id')
+        );
+
+        return response()->json($user);
+    }
+
+    public function userDelete(Request $request)
+    {
+        collect(json_decode($request->get('data')))->each(function ($cat){
+            User::destroy($cat->id);
         });
 
         return response('ok');

@@ -43,6 +43,17 @@ class User extends Authenticatable
     ];
 
     /**
+     * The user is admin or not
+     *
+     * @return boolean
+     */
+    public function isAdmin()
+    {
+        if ($this->role == 'admin') return true;
+        else return false;
+    }
+
+    /**
      * @return HasMany
      */
     public function posts()
